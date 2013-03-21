@@ -26,9 +26,6 @@ html.maximized {
   overflow: hidden;
 }
 
-body {
-  margin: 25px;
-}
 
 /* Only allow plaintext?
 [contenteditable=""],
@@ -127,7 +124,7 @@ body {
  * Page
  */
 
-h1 {
+/*h1 {
   font: 20px/1.5 sans-serif;
   background: #333;
   margin: -25px -25px 0 -25px;
@@ -136,8 +133,8 @@ h1 {
   color: white;
   border-top: #e15729 solid 10px;
 }
-
-#open, #lights {
+*/
+/*#open, #lights {
   font: 20px/1.5 sans-serif;
   position: fixed;
   right: 0;
@@ -154,7 +151,7 @@ h1 {
 #open {
   top: 10px;
   background: #333;
-}
+}*/
 
 #lights {
   font-size: 18px;

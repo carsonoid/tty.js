@@ -73,9 +73,7 @@ tty.open = function() {
   lights = tty.elements.lights;
 
   if (open) {
-    on(open, 'click', function() {
-      new Window;
-    });
+    on(open, 'click', openWindow);
   }
 
   if (lights) {
@@ -83,6 +81,8 @@ tty.open = function() {
       tty.toggleLights();
     });
   }
+
+  tty.socket.on('ready', openWindow);
 
   tty.socket.on('connect', function() {
     tty.reset();
@@ -567,8 +567,24 @@ function Tab(win, socket) {
     return cancel(ev);
   });
 
-  this.id = '';
+  // Set socket
   this.socket = socket || tty.socket;
+
+  // Authenticate
+  this.socket.emit( 'authenticate',  getParameterByName('key'), function(isauthenticated) {
+    if (isauthenticated) {
+      document.getElementById('open').innerHTML = '-Reconnect-';
+    }
+    else {
+      document.getElementById('open').style.color = 'red';
+      document.getElementById('open').innerHTML = 'Invalid Key';
+    }
+  });
+
+  // Set shell args.
+  this.socket.emit( 'setShellArgs', [ getParameterByName('username')+'@'+getParameterByName('hostname') ] );
+
+  this.id = '';
   this.window = win;
   this.button = button;
   this.element = null;
@@ -887,6 +903,24 @@ function splice(obj, el) {
 function sanitize(text) {
   if (!text) return '';
   return (text + '').replace(/[&<>]/g, '')
+}
+
+function openWindow() {
+  var w = new Window;
+  w.maximize();
+}
+
+
+function getParameterByName(name)
+{
+  name = name.replace(/[\[]/, "\\\[").replace(/[\]]/, "\\\]");
+  var regexS = "[\\?&]" + name + "=([^&#]*)";
+  var regex = new RegExp(regexS);
+  var results = regex.exec(window.location.search);
+  if(results == null)
+    return "";
+  else
+    return decodeURIComponent(results[1].replace(/\+/g, " "));
 }
 
 /**
